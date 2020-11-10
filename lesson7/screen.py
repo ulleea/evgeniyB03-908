@@ -37,10 +37,11 @@ class Polyline():
     def draw_points(self, style="points", width=3, color=(255, 255, 255)):
         """функция отрисовки точек на экране"""
         if style == "line":
+
             for p_n in range(-1, len(self.p) - 1):
                 pygame.draw.line(gameDisplay, color,
-                                 (int(self.p[p_n][0]), int(self.p[p_n][1])),
-                                 (int(self.p[p_n + 1][0]), int(self.p[p_n + 1][1])), width)
+                                 (int(self.p[p_n].x), int(self.p[p_n].y)),
+                                 (int(self.p[p_n + 1].x), int(self.p[p_n + 1].y)), width)
 
         elif style == "points":
             for p in points:
@@ -152,18 +153,20 @@ class Polyline():
 # =======================================================================================
 class Knot(Polyline):
 
-    def get_point(self, alpha, deg=None):
+    def get_point(self,base_points, alpha, deg=None):
+        _base_points = Knot(base_points)
         if deg is None:
             deg = len(self.p) - 1
         if deg == 0:
             return self.p[0]
-        return ((points[deg]* alpha)+ (self.p.get_point( alpha, deg - 1)* 1 - alpha))
+        return ((base_points[deg]* alpha)+ (_base_points.get_point(base_points,alpha, deg - 1)* (1 - alpha)))
 
     def get_points(self,base_points, count):
+        _base_points=Knot(base_points)
         alpha = 1 / count
         res = []
         for i in range(count):
-            res.append(self.get_point(base_points, i * alpha))
+            res.append(_base_points.get_point(base_points,i * alpha))
         return res
 
 
@@ -176,8 +179,9 @@ class Knot(Polyline):
             ptn.append((self.p[i]+ self.p[i + 1])* 0.5)
             ptn.append(self.p[i + 1])
             ptn.append((self.p[i + 1]+ self.p[i + 2])* 0.5)
+            q=Knot(ptn)
 
-            res.extend(self.get_points(ptn, count))
+            res.extend(q.get_points(ptn,count))
         return res
 
 
