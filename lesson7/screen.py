@@ -74,10 +74,10 @@ class Polyline():
         """функция перерасчета координат опорных точек"""
         for i in range(len(self.p)):
             self.p[i] = self.p[i] + speeds[i]
-            if self.p[i][0] > SCREEN_DIM[0] or self.p[i][0] < 0:
-                speeds[i] = (- speeds[i][0], speeds[i][1])
-            if self.p[i][1] > SCREEN_DIM[1] or self.p[i][1] < 0:
-                speeds[i] = (speeds[i][0], -speeds[i][1])
+            if self.p[i].x > SCREEN_DIM[0] or self.p[i].x < 0:
+                speeds[i] = Vector(- speeds[i].x, speeds[i].y)
+            if self.p[i].y > SCREEN_DIM[1] or self.p[i].y < 0:
+                speeds[i] = Vector(speeds[i].x, -speeds[i].y)
 # =======================================================================================
 # Функции для работы с векторами
 # =======================================================================================
@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 points.append(Vector(event.pos[0],event.pos[1]))
-                speeds.append((random.random() * 2, random.random() * 2))
+                speeds.append(Vector(random.random() * 2, random.random() * 2))
 
         gameDisplay.fill((0, 0, 0))
         hue = (hue + 1) % 360
@@ -244,7 +244,7 @@ if __name__ == "__main__":
         r=Knot(p.get_knot(steps))
         r.draw_points("line", 3, color)
         if not pause:
-            p.set_points( speeds)
+            p.set_points(speeds)
         if show_help:
             r.draw_help()
 
