@@ -86,7 +86,7 @@ m=len(gr)
 d=dict()
 for i in range(m):
     d[i]=[]
-threads = [threading.Thread(target=count,args=(gr,_)) for _ in range(m)]
+threads = [threading.Thread(target=paral,args=(gr,_)) for _ in range(m)]
 for i in threads:
     i.start()
 
