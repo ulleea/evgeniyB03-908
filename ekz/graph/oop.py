@@ -11,7 +11,7 @@ class Graph:
         self.n=n
         self.threads=[]
         self.m=0
-    def graph(self,l):
+    def graph(self):
         with open(self.s1,'r') as file:
             for a in file:
                 a=a.split()
@@ -59,9 +59,9 @@ class Graph:
 
     def count(self,i):
         sum=0
-        for  j in gr[i]:
-            for u in g[j]:
-                if u in gr[i]:
+        for  j in self.gr[i]:
+            for u in self.g[j]:
+                if u in self.gr[i]:
                     sum+=1
         return sum
 
@@ -78,15 +78,18 @@ class Graph:
                 t+=1
     def paral(self,i):
         ln = len(self.gr[i])
-        self.group_rand(self, ln, i)
-        t=self.count(self, i)
+        self.group_rand( ln, i)
+        t=self.count( i)
         return t
 
     def pros(self):
+        self.glub()
+        self.graph()
+        self.groups()
+        self.get_grp()
         from multiprocessing import Pool
-        pool = Pool(processes=n)
+        pool = Pool(processes=self.n)
         self.threads = [pool.apply(self.count, args=(i,)) for i in range(self.m)]
-
         self.threadsrand = []
         for i in range(1000):
             y = [pool.apply(self.paral, args=(i,)) for i in range(self.m)]
@@ -111,7 +114,7 @@ if __name__ == '__main__':
     # print(gr)
     import time
     o=time.time()
-    w=Graph(s1,s2)
+    w=Graph(s1,s2,1)
     # threads = [pool.apply(count,args=(gr,i,g,)) for i in range(m)]
     #
     # threadsrand=[]
@@ -119,6 +122,8 @@ if __name__ == '__main__':
     #     y=[pool.apply(paral,args=(gr,i,g,l,)) for i in range(m)]
     #     threadsrand.append(y)
     threads,threadsrand=w.pros()
+    print(threads)
+    print(threadsrand)
     sr=[0 for i in range(16)]
     for j in range(16):
         for i in range(1000):

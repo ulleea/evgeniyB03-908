@@ -16,6 +16,7 @@ def graph(s,l):
                     else:
                         if d[j][k]==-1:
                             g[i].add(j)
+
 def glub(s):
     l=0
     reb=0
@@ -67,36 +68,37 @@ def paral(gr,i,g,l):
 from multiprocessing import Process,Lock
 from multiprocessing import Pool
 if __name__ == '__main__':
-
+    import time
+    o = time.time()
     lock = Lock()
     g=dict()
     gr=dict()
     s1='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\1.txt'
     s2='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\2.txt'
-    n=4
+    n=1
     pool=Pool(processes=n)
     l,reb=glub(s1)
     graph(s1,l)
     groups(s2)
     m=len(gr)
-    import time
+
     print(g)
     print(gr)
-    o=time.time()
+
     threads = [pool.apply(count,args=(gr,i,g,)) for i in range(m)]
 
     threadsrand=[]
-    for i in range(100):
+    for i in range(1000):
         y=[pool.apply(paral,args=(gr,i,g,l,)) for i in range(m)]
         threadsrand.append(y)
 
 
-    sr=[0 for i in range(5)]
+    sr=[0 for i in range(16)]
     print(sr)
-    for j in range(5):
-        for i in range(100):
+    for j in range(16):
+        for i in range(1000):
             sr[j]+=threadsrand[i][j]
-        sr[j]=sr[j]/100
+        sr[j]=sr[j]/1000
     print(sr)
     print(threads)
     o2=time.time()
