@@ -1,4 +1,5 @@
 def graph(s,l):
+    d=dict()
     with open(s,'r') as file:
         for a in file:
             a=a.split()
@@ -42,8 +43,9 @@ def groups(s):
 def count(gr,i):
     sum=0
     for  j in gr[i]:
-
-        sum+=len(g[j])
+        for u in g[j]:
+            if u in gr[i]:
+                sum+=1
     d[i].append(sum)
 
 def group_rand(a,ln,i):
@@ -72,7 +74,6 @@ def paral(gr,i):
 
 import threading
 lock = threading.Lock()
-d=dict()
 g=dict()
 gr=dict()
 s1='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\1.txt'
@@ -82,10 +83,14 @@ l,reb=glub(s1)
 graph(s1,l)
 groups(s2)
 m=len(gr)
-d=dict()
+
 print(g)
+print(gr)
+
+d=dict()
 for i in range(m):
     d[i]=[]
+
 threads = [threading.Thread(target=paral,args=(gr,_)) for _ in range(m)]
 for i in threads:
     i.start()
