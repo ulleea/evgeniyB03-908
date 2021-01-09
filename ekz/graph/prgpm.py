@@ -82,6 +82,7 @@ n=int(input())
 
 l,reb=glub(s1)
 graph(s1,l)
+groups(s2)
 m=len(gr)
 d=dict()
 for i in range(m):
