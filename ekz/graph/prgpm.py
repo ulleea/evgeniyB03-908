@@ -7,7 +7,7 @@ def graph(s,l):
             for i in range(1,q):
                 d[int(a[0])].append(int(a[i]))
     for i in range(l):
-        for k in range(q):
+        for k in range(reb):
             if d[i][k]==1:
                 for j in range(l):
                     if i==j:
@@ -42,29 +42,28 @@ def groups(s):
 def count(gr,i):
     sum=0
     for  j in gr[i]:
+
         sum+=len(g[j])
     d[i].append(sum)
 
-def group_rand(a,ln):
+def group_rand(a,ln,i):
     import random
     a[i]=set()
     t=0
     while t!=ln:
-        q=random.randint(1,l)
+        q=random.randint(0,l-1)
         if q in a:
             pass
         else:
             a[i].add(q)
             t+=1
-
-
 def paral(gr,i):
     with lock:
         count(gr,i)
         ln=len(gr[i])
         for j in range(3):
             a=dict()
-            group_rand(a,ln)
+            group_rand(a,ln,i)
             count(a,i)
         sr=0
         for k in range(len(d[i])):
@@ -76,22 +75,24 @@ lock = threading.Lock()
 d=dict()
 g=dict()
 gr=dict()
-s1=input()
-s2=input()
-n=int(input())
-
+s1='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\1.txt'
+s2='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\2.txt'
+n=3
 l,reb=glub(s1)
 graph(s1,l)
 groups(s2)
 m=len(gr)
 d=dict()
+print(g)
 for i in range(m):
     d[i]=[]
 threads = [threading.Thread(target=paral,args=(gr,_)) for _ in range(m)]
 for i in threads:
     i.start()
-
+for i in threads:
+    i.join()
 for i in range(len(d)):
+
     print(d[i])
 
 # g=dict()
