@@ -57,29 +57,37 @@ class Graph:
         self.m=len(self.gr)
         return self.m
 
-    def count(self,i):
+    def count(self,j):
         sum=0
-        for  j in self.gr[i]:
-            for u in self.g[j]:
-                if u in self.gr[i]:
+        for  _ in self.gr[j]:
+            for u in self.g[_]:
+                if u in self.gr[j]:
                     sum+=1
         return sum
 
-    def group_rand(self,ln,i):
+    def rand_count(self,j):
+        sum = 0
+        for _ in self.a[j]:
+            for u in self.g[_]:
+                if u in self.a[j]:
+                    sum += 1
+        return sum
+
+    def group_rand(self,ln,j):
         import random
-        self.a[i]=set()
+        self.a[j]=set()
         t=0
         while t!=ln:
             q=random.randint(0,self.l-1)
             if q in self.a:
                 pass
             else:
-                self.a[i].add(q)
+                self.a[j].add(q)
                 t+=1
-    def paral(self,i):
-        ln = len(self.gr[i])
-        self.group_rand( ln, i)
-        t=self.count( i)
+    def paral(self,j):
+        ln = len(self.gr[j])
+        self.group_rand( ln, j)
+        t=self.rand_count(j)
         return t
 
     def pros(self):
@@ -92,7 +100,7 @@ class Graph:
         self.threads = [pool.apply(self.count, args=(i,)) for i in range(self.m)]
         self.threadsrand = []
         for i in range(1000):
-            y = [pool.apply(self.paral, args=(i,)) for i in range(self.m)]
+            y = [pool.apply(self.paral, args=(j,)) for j in range(self.m)]
             self.threadsrand.append(y)
         return self.threads, self.threadsrand
 
