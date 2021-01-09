@@ -40,15 +40,14 @@ def groups(s):
                 else:
                     gr[int(str[0][:-1])].add(int(str[i]))
 
-def count(gr,i):
+def count(gr,i,g):
     sum=0
     for  j in gr[i]:
         for u in g[j]:
             if u in gr[i]:
                 sum+=1
-    d[i].append(sum)
-
-def group_rand(a,ln,i):
+    return sum
+def group_rand(a,ln,i,g,l):
     import random
     a[i]=set()
     t=0
@@ -59,56 +58,47 @@ def group_rand(a,ln,i):
         else:
             a[i].add(q)
             t+=1
-def paral(gr,i):
-    with lock:
-        count(gr,i)
-        ln=len(gr[i])
-        for j in range(3):
-            a=dict()
-            group_rand(a,ln,i)
-            count(a,i)
-        sr=0
-        for k in range(len(d[i])):
-            sr+=d[i][k]
-        d[i].append(sr/len(d[i]))
+def paral(gr,i,g,l):
+    ln = len(gr[i])
+    a = dict()
+    group_rand(a, ln, i, g, l)
+    t=count(a, i, g)
+    return t
+from multiprocessing import Process,Lock
+from multiprocessing import Pool
+if __name__ == '__main__':
 
-import threading
-lock = threading.Lock()
-g=dict()
-gr=dict()
-s1='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\1.txt'
-s2='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\2.txt'
-n=3
-l,reb=glub(s1)
-graph(s1,l)
-groups(s2)
-m=len(gr)
+    lock = Lock()
+    g=dict()
+    gr=dict()
+    s1='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\1.txt'
+    s2='C:\\Users\\Евгений\\PycharmProjects\\pycharmrepository\\repositoriy\\ekz\\graph\\2.txt'
+    n=4
+    pool=Pool(processes=n)
+    l,reb=glub(s1)
+    graph(s1,l)
+    groups(s2)
+    m=len(gr)
+    import time
+    print(g)
+    print(gr)
+    o=time.time()
+    threads = [pool.apply(count,args=(gr,i,g,)) for i in range(m)]
 
-print(g)
-print(gr)
+    threadsrand=[]
+    for i in range(100):
+        y=[pool.apply(paral,args=(gr,i,g,l,)) for i in range(m)]
+        threadsrand.append(y)
 
-d=dict()
-for i in range(m):
-    d[i]=[]
 
-threads = [threading.Thread(target=paral,args=(gr,_)) for _ in range(m)]
-for i in threads:
-    i.start()
-for i in threads:
-    i.join()
-for i in range(len(d)):
+    sr=[0 for i in range(5)]
+    print(sr)
+    for j in range(5):
+        for i in range(100):
+            sr[j]+=threadsrand[i][j]
+        sr[j]=sr[j]/100
+    print(sr)
+    print(threads)
+    o2=time.time()
+    print(o2-o)
 
-    print(d[i])
-
-# g=dict()
-# for i in  range(10):
-#     g[i]=10-i
-# g[10]=1
-# for i in range(10):
-#     print(g[i])
-# print(len(g))
-# a=set()
-# s='1, 2, 3, 34, 56'
-# s=s.split()
-# a.add(int(s[0][:-1]))
-# print(s[4])
